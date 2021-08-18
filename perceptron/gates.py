@@ -1,7 +1,7 @@
 import numpy as np
 
 # Gates
-def AND(x1, x2):
+def AND(x1:float, x2:float) -> int:
     x = np.array([x1, x2])    
     w = np.array([0.5, 0.5])
     b = -0.7
@@ -10,7 +10,7 @@ def AND(x1, x2):
         return 0
     return 1
 
-def NAND(x1, x2):
+def NAND(x1:float, x2:float) -> int:
     x = np.array([x1, x2])
     w = np.array([-0.5, -0.5])
     b = 0.7
@@ -19,7 +19,7 @@ def NAND(x1, x2):
         return 0
     return 1
 
-def OR(x1, x2):
+def OR(x1:float, x2:float) -> int:
     x = np.array([x1, x2])
     w = np.array([0.5, 0.5])
     b = -0.2
@@ -28,5 +28,5 @@ def OR(x1, x2):
         return 0
     return 1
     
-def XOR(x1, x2):
+def XOR(x1:float, x2:float) -> int:
     return AND(NAND(x1, x2), OR(x1, x2))
