@@ -1,3 +1,4 @@
 __pycache__/
 onebottlekick.*
 *.pkl
+.virtual_documents/
