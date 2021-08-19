@@ -1,7 +1,16 @@
 import numpy as np
 
-def accuracy(y_test : np.ndarray, y_pred : np.ndarray) -> np.ndarray:
-    return y_test == y_pred
+
 
 def accuracy_score(y_test : np.ndarray, y_pred : np.ndarray) -> np.ndarray:
-    sum(accuracy(y_test, y_pred)) / len(y_test)
+    cnt = 0
+    if y_pred.ndim != 1:
+        y_pred_max = []
+        for j in range(len(y_pred)):
+            y_pred_max.append(np.argmax(y_pred[j]))
+        y_pred = np.array(y_pred_max)
+
+    for i in range(len(y_test)):
+        if y_test[i] == y_pred[i]:
+            cnt += 1
+    return cnt/len(y_test)
