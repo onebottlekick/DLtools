@@ -1,7 +1,6 @@
 import numpy as np
 
 
-
 def accuracy_score(y_test : np.ndarray, y_pred : np.ndarray) -> np.ndarray:
     cnt = 0
     if y_pred.ndim != 1:
