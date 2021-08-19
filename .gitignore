@@ -1,8 +1,5 @@
 __pycache__/
 onebottlekick.*
-<<<<<<< HEAD
 *.pkl
-=======
 *.pkl
 .virtual_documents/
->>>>>>> dev/0.1.3
