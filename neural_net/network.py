@@ -1,13 +1,14 @@
 import numpy as np
+import pickle
 
-from functions.activation import sigmoid, identity, softmax, relu
-from typing import Dict, List
+from functions import sigmoid, identity, softmax, relu
+from typing import List
 
 
-def activation(func_name : str, a : np.ndarray):
+def activation_match(func_name : str, a : np.ndarray):
     func_list = ['sigmoid', 'identity', 'softmax', 'relu']
     if func_name not in func_list:
-        raise ValueError('not a valid function name')
+        raise ValueError(f'Not a valid function name. your input : {func_name}')
     if func_name == 'sigmoid':
         return sigmoid(a)
     elif func_name == 'identity':
@@ -39,32 +40,69 @@ class NeuralNet:
         self.weights = []
         self.biases = []
         self.y_pred = None
+        self.activations = []
     
-    def add(self, parameters : Dict[str, np.ndarray]):
-        for name, value in parameters.items():
-            self.layers[name] = value
+    def add(self, layer):
+        if isinstance(layer, dict):
+            for name, value in layer.items():
+                self.layers[name] = value
+        else:
+            weight, bias = layer.layer().items()
+            self.weights.append(weight[1])
+            self.biases.append(bias[1])
+            self.activations.append(layer.activation_function())
 
-    def fit(self, x : np.ndarray, act_func : List[str]) -> np.ndarray:
-        for layer in self.layers.items():
+    def load_and_fit(self, file_path, x : np.ndarray, act_func : List[str]):
+        self.activations += act_func 
+        with open(file_path, 'rb') as f:
+            layers = pickle.load(f)
+        self.add(layer=layers)
+        for item in self.layers.items():
             try:
-                if layer[0][0][0] == 'W':
-                    self.weights.append(layer)
-                if layer[0][0][0] == 'b':
-                    self.biases.append(layer)
+                if item[0][0][0] == 'W':
+                    self.weights.append(item)
+                if item[0][0][0] == 'b':
+                    self.biases.append(item)
             except Exception as e:
                 print(e, "input example : {'W+idx or b+idx' : np.ndarray}")
-        try:
-            self.weights = sorted(self.weights, key=lambda x:x[0][-1])
-            self.biases = sorted(self.biases, key=lambda x:x[0][-1])
-            a = np.dot(x, self.weights[0][1]) + self.biases[0][1]
-            z = activation(act_func[0], a)
-            for i in range(1, len(self.weights) - 1):
-                a = np.dot(z, self.weights[i][1]) + self.biases[i][1]
-                z = activation(act_func[i], a)
-            a = np.dot(z, self.weights[-1][1]) + self.biases[-1][1]
-            self.y_pred = activation(act_func[-1], a)
-        except Exception as e:
-            print(e)
+
+        self.weights = sorted(self.weights, key=lambda x:x[0][-1])
+        self.biases = sorted(self.biases, key=lambda x:x[0][-1])
+
+        a = np.dot(x, self.weights[0][1]) + self.biases[0][1]
+        z = activation_match(self.activations[0], a)
+        for i in range(1, len(self.weights) - 1):
+            a = np.dot(z, self.weights[i][1]) + self.biases[i][1]
+            z = activation_match(self.activations[i], a)
+        a = np.dot(z, self.weights[-1][1]) + self.biases[-1][1]
+        self.y_pred = activation_match(self.activations[-1], a)
+
+    # TODO model save function 만들어야됨
+    def save(self, file_path):
+        raise NotImplementedError
+
+    # def prepare(self):
+    #     for item in self.layers.items():
+    #         try:
+    #             if item[0][0][0] == 'W':
+    #                 self.weights.append(item)
+    #             if item[0][0][0] == 'b':
+    #                 self.biases.append(item)
+    #         except Exception as e:
+    #             print(e, "input example : {'W+idx or b+idx' : np.ndarray}")
+    #     self.weights = sorted(self.weights, key=lambda x:x[0][-1])
+    #     self.biases = sorted(self.biases, key=lambda x:x[0][-1])
+
+    # TODO 임시 fit method
+    def fit(self, x : np.ndarray):
+        a = np.dot(x, self.weights[0]) + self.biases[0]
+        z = activation_match(self.activations[0], a)
+        for i in range(1, len(self.weights) - 1):
+            a = np.dot(z, self.weights[i]) + self.biases[i]
+            z = activation_match(self.activations[i], a)
+        a = np.dot(z, self.weights[-1]) + self.biases[-1]
+        self.y_pred = activation_match(self.activations[-1], a)
+
 
     def predict(self):
         return self.y_pred
