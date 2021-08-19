@@ -22,21 +22,18 @@ def activation_match(func_name : str, a : np.ndarray):
 """
 Usage:
 model = NeuralNet()
-parameters = {
-    'W1' : np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]]),
-    'W2' : np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]]),
-    'W3' : np.array([[0.1, 0.3], [0.2, 0.4]]),
-    'b1' : np.array([0.1, 0.2, 0.3]),
-    'b2' : np.array([0.1, 0.2]),
-    'b3' : np.array([0.1, 0.2])
-    }
-model.add(parameters=parameters)
-model.fit(np.array([1.0, 0.5]), ['sigmoid', 'sigmoid', 'identity'])
-y_pred = model.predict()
+layer1 = Layer(idx=1, node_size=6, input_size=2, activation='sigmoid')
+layer2 = Layer(idx=2, node_size=6, input_size=3, activation='sigmoid')
+layer3 = Layer(idx=3, node_size=4, input_size=2, activation='identity')
+model.add(layer1)
+model.add(layer2)
+model.add(layer3)
+model.fit(x)
+prediction = model.predict()
 """
 class NeuralNet:
     def __init__(self):
-        self.layers = {}
+        self.parameters = {}
         self.weights = []
         self.biases = []
         self.y_pred = None
@@ -45,19 +42,25 @@ class NeuralNet:
     def add(self, layer):
         if isinstance(layer, dict):
             for name, value in layer.items():
-                self.layers[name] = value
+                self.parameters[name] = value
         else:
             weight, bias = layer.layer().items()
+            self.parameters[weight[0]] = weight[1]
+            self.parameters[bias[0]] = bias[1]
             self.weights.append(weight[1])
             self.biases.append(bias[1])
             self.activations.append(layer.activation_function())
 
+    # Usage:
+    # model = NeuralNet()
+    # model.load_and_fit('sample_weight.pkl', X_test, ['sigmoid', 'sigmoid', 'softmax'])
+    # y_pred = model.predict()
     def load_and_fit(self, file_path, x : np.ndarray, act_func : List[str]):
         self.activations += act_func 
         with open(file_path, 'rb') as f:
             layers = pickle.load(f)
         self.add(layer=layers)
-        for item in self.layers.items():
+        for item in self.parameters.items():
             try:
                 if item[0][0][0] == 'W':
                     self.weights.append(item)
@@ -77,9 +80,11 @@ class NeuralNet:
         a = np.dot(z, self.weights[-1][1]) + self.biases[-1][1]
         self.y_pred = activation_match(self.activations[-1], a)
 
-    # TODO model save function 만들어야됨
+    # Usage:
+    # model.save({filePath})
     def save(self, file_path):
-        raise NotImplementedError
+        with open(file_path, 'wb') as f:
+            pickle.dump(self.parameters, f)
 
     # def prepare(self):
     #     for item in self.layers.items():
@@ -93,7 +98,7 @@ class NeuralNet:
     #     self.weights = sorted(self.weights, key=lambda x:x[0][-1])
     #     self.biases = sorted(self.biases, key=lambda x:x[0][-1])
 
-    # TODO 임시 fit method
+    # TODO have to update (gradient descent)
     def fit(self, x : np.ndarray):
         a = np.dot(x, self.weights[0]) + self.biases[0]
         z = activation_match(self.activations[0], a)
