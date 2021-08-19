@@ -4,15 +4,6 @@ from functions.activation import sigmoid, identity, softmax, relu
 from typing import Dict, List
 
 
-"""
-Usage:
-net = NeuralNet()
-net.add(np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]]), np.array([0.1, 0.2, 0.3]))
-net.add(np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]]), np.array([0.1, 0.2]))
-net.add(np.array([[0.1, 0.3], [0.2, 0.4]]), np.array([0.1, 0.2]))
-print(net.forward(np.array([1.0, 0.5])))
-"""
-
 def activation(func_name : str, a : np.ndarray):
     func_list = ['sigmoid', 'identity', 'softmax', 'relu']
     if func_name not in func_list:
@@ -26,6 +17,21 @@ def activation(func_name : str, a : np.ndarray):
     elif func_name == 'relu':
         return relu(a)
 
+        
+"""
+Usage:
+net = NeuralNet()
+parameters = {
+    'W1' : np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]]),
+    'W2' : np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]]),
+    'W3' : np.array([[0.1, 0.3], [0.2, 0.4]]),
+    'b1' : np.array([0.1, 0.2, 0.3]),
+    'b2' : np.array([0.1, 0.2]),
+    'b3' : np.array([0.1, 0.2])
+    }
+net.add(parameters=parameters)
+net.forward(np.array([1.0, 0.5]), ['sigmoid', 'sigmoid', 'identity'])
+"""
 class NeuralNet:
     def __init__(self):
         self.layers = {}
