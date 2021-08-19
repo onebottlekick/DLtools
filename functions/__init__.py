@@ -9,6 +9,7 @@ from .metrics import accuracy_score
 from .diff import numerical_gradient
 from .loss import cross_entropy_error
 from .loss import sum_sqares_error
+from .gradient import gradient_descent
 
 __all__ = ['step_function', 'sigmoid', 'relu', 'softmax','identity',  'plot_activation_func', 'plot_img',
-        'accuracy_score', 'numerical_gradient', 'cross_entropy_error', 'sum_sqares_error']
+        'accuracy_score', 'numerical_gradient', 'cross_entropy_error', 'sum_sqares_error', 'gradient_descent']
