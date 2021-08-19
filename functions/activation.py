@@ -12,11 +12,15 @@ def relu(x : np.ndarray) -> np.ndarray:
 
 # data need to be normalized
 def softmax(x : np.ndarray) -> np.ndarray:
-    c = np.max(x)
-    exp_x = np.exp(x - c)
-    sum_exp_x = np.sum(exp_x)
-    y = exp_x / sum_exp_x
-    return y
+    try:
+        c = np.max(x)
+        exp_x = np.exp(x - c)
+        sum_exp_x = np.sum(exp_x)
+        y = exp_x / sum_exp_x
+        return y
+    except Exception as e:
+        print(e)
+
 
 def identity(x : np.ndarray) -> np.ndarray:
     return x
