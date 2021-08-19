@@ -3,3 +3,4 @@ onebottlekick.*
 *.pkl
 *.pkl
 .virtual_documents/
+.ipynb_checkpoints/
