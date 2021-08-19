@@ -17,3 +17,6 @@ def softmax(x : np.ndarray) -> np.ndarray:
     sum_exp_x = np.sum(exp_x)
     y = exp_x / sum_exp_x
     return y
+
+def identity(x : np.ndarray) -> np.ndarray:
+    return x
