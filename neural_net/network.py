@@ -86,17 +86,6 @@ class NeuralNet:
         with open(file_path, 'wb') as f:
             pickle.dump(self.parameters, f)
 
-    # def prepare(self):
-    #     for item in self.layers.items():
-    #         try:
-    #             if item[0][0][0] == 'W':
-    #                 self.weights.append(item)
-    #             if item[0][0][0] == 'b':
-    #                 self.biases.append(item)
-    #         except Exception as e:
-    #             print(e, "input example : {'W+idx or b+idx' : np.ndarray}")
-    #     self.weights = sorted(self.weights, key=lambda x:x[0][-1])
-    #     self.biases = sorted(self.biases, key=lambda x:x[0][-1])
 
     # TODO have to update (gradient descent)
     def fit(self, x : np.ndarray):
