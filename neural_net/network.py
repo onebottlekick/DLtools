@@ -55,7 +55,7 @@ class NeuralNet:
     # model = NeuralNet()
     # model.load_and_fit('sample_weight.pkl', X_test, ['sigmoid', 'sigmoid', 'softmax'])
     # y_pred = model.predict()
-    def load_and_fit(self, file_path, x : np.ndarray, act_func : List[str]):
+    def load(self, file_path, x : np.ndarray, act_func : List[str]):
         self.activations += act_func 
         with open(file_path, 'rb') as f:
             layers = pickle.load(f)
